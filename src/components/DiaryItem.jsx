@@ -1,7 +1,12 @@
 import React from 'react';
 
-const DiaryItem = () => {
-  return <div>다이어리 아이템</div>;
+const DiaryItem = ({ author, content, emotion, id }) => {
+  return (
+    <>
+      <div>작성자 : {author}</div>
+      <div>내용 : {content}</div>
+    </>
+  );
 };
 
 export default DiaryItem;
