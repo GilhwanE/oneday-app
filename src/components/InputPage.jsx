@@ -14,7 +14,7 @@ const TextArea = styled.textarea`
   border: 1px solid gray;
 `;
 
-const InputPage = ({ Container }) => {
+const InputPage = ({ Container, onCreate }) => {
   const reftitle = useRef();
   const refcontent = useRef();
 
@@ -42,6 +42,8 @@ const InputPage = ({ Container }) => {
       refcontent.current.focus();
       alert(' 5글자 입력이상을 입력해주세요');
     }
+
+    onCreate(state.content, state.title, state.emotion); // 데이터들을 app.js onCreate 함수 데이터로 전달한다.
   };
 
   return (
