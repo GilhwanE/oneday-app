@@ -10,3 +10,12 @@
    - delete : 사용자는 자신의 기록을 삭제 할 수 있습니다.
 3. UX/UI design 직접 고민하고 만들기 (tool : figma)
 4. css 스타일 작업은 styled-components 이용하기
+
+
+
+#### ⛔️ 오류사항 (문제발생) ⛔️ 
+
+❗️ onCreat 부분에서 inputpage 내용들을 입력하고 저장하는 과정에서 오류 발생.
+✅ setData으로 랜더링해야할 데이터 값의 형태를 배열값으로 전달해야 했는데.. 그냥 값을 넣어버림 setData()
+   setData([newItem, ...data]); // state는 배열형태임으로 배열로 랜더링해야함.
+
