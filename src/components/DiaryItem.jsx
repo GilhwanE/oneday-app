@@ -1,10 +1,30 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-const DiaryItem = ({ title, content, id, onRemove }) => {
+const DiaryItem = ({ title, content, id, onRemove, onEdit }) => {
+  const [isEdit, setIsEdit] = useState(false);
+  const [localContent, setLocalContent] = useState(content);
+
+  const toggleEdit = () => {
+    setIsEdit(!isEdit);
+    onEdit(id, localContent);
+  };
+
   return (
     <>
       <div>작성자 : {title}</div>
-      <div>내용 : {content}</div>
+      <div>
+        내용 :
+        {isEdit ? (
+          <>
+            <textarea
+              value={localContent}
+              onChange={(e) => setLocalContent(e.target.value)}
+            ></textarea>
+          </>
+        ) : (
+          <>{content}</>
+        )}
+      </div>
       <div>{id}</div>
 
       <div>
@@ -17,6 +37,8 @@ const DiaryItem = ({ title, content, id, onRemove }) => {
         >
           삭제하기
         </button>
+
+        <button onClick={toggleEdit}>수정하기</button>
       </div>
     </>
   );

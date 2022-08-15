@@ -77,13 +77,24 @@ function App() {
     setData(newDiaryList);
   };
 
+  const onEdit = (targetId, newContent) => {
+    console.log(targetId, newContent, data);
+    // 수정하기 버튼을 작성하면 , 변경된 content값이 setData를 통해서 변경된 값이 랜더링되어야 하는 과정
+    // 수정하려는 id값을 선택한다. => map함수를 이용하여 localContent값을 setData값안에 넣으면 되는거 아님?
+    setData(
+      data.map((it) =>
+        it.id === targetId ? { ...it, content: newContent } : it
+      )
+    );
+  };
+
   return (
     <>
       <MainContainer>
         <Inner>
           <Header />
           <InputPage Container={Container} onCreate={onCreate} />
-          <DiaryList diaryList={data} onRemove={onRemove} />
+          <DiaryList diaryList={data} onRemove={onRemove} onEdit={onEdit} />
           <Footer Container={Container} />
         </Inner>
       </MainContainer>
