@@ -42,7 +42,8 @@ const InputPage = ({ Container, onCreate }) => {
       refcontent.current.focus();
       alert(' 5글자 입력이상을 입력해주세요');
     }
-
+    console.log(state);
+    setState({ title: '', content: '' }); // 저장후 input에 입력된 값 초기화
     onCreate(state.content, state.title, state.emotion); // 데이터들을 app.js onCreate 함수 데이터로 전달한다.
   };
 
