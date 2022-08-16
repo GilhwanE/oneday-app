@@ -6,6 +6,7 @@ import InputPage from './components/InputPage';
 import styled from 'styled-components';
 import DiaryList from './components/DiaryList';
 import { useRef, useState } from 'react';
+import { useEffect } from 'react';
 
 const MainContainer = styled.div`
   width: 100%;
@@ -29,27 +30,6 @@ const Inner = styled.div`
   flex-direction: column;
 `;
 
-// const dummyList = [
-//   {
-//     id: 1,
-//     author: 'hwan',
-//     content: 'hi 1',
-//     emotion: 1,
-//   },
-//   {
-//     id: 2,
-//     author: 'gil',
-//     content: 'hi 2',
-//     emotion: 2,
-//   },
-//   {
-//     id: 3,
-//     author: 'kim',
-//     content: 'hi 3',
-//     emotion: 3,
-//   },
-// ];
-
 function App() {
   // 리액트는 단방향이다 그렇기 떄문에 컴포넌트 간에 데이터를 주고 받는 행위는 하지 않는다.
   // 부모 컴포넌트로부터 각각의 컴포넌트에게 데이터를 전달해주는 로직을 짜야 한다.
@@ -57,8 +37,29 @@ function App() {
   // 상태 data값과 변경되는 setData값을 배열로 선언
   //
   const [data, setData] = useState([]);
-
   const dataId = useRef(0); // 리스트 아이템이 1번 2번.. id가 늘어남
+
+  const getData = async () => {
+    const res = await fetch(
+      'https://jsonplaceholder.typicode.com/comments'
+    ).then((res) => res.json());
+
+    const initData = res.slice(0, 5).map((it) => {
+      // slice
+      return {
+        title: it.email,
+        content: it.body,
+        id: dataId.current++, // return 되면 값을 ㄱ반환하기 때문에 후위연산자로 했음
+      };
+    });
+
+    setData(initData);
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
+
   const onCreate = (content, title) => {
     const newItem = {
       content,
@@ -70,15 +71,12 @@ function App() {
   };
 
   const onRemove = (targetId) => {
-    console.log(`${targetId}가 삭제`);
     // 삭제된 내용 말고 나머지 data값으로 업데이트 한후 setdata로 반영하는부분
     const newDiaryList = data.filter((it) => it.id !== targetId); // targetId는 현재 내가 선택한 id 그리고 it.id 순서 이값이 서로 같지 않은 것들만 필터해서 화면에 보여주겠다는것, 서로같은값들이 필터된다면 삭제가 되지 않겠지 (필터란 결국 보여주는것을 반환)
-    console.log(newDiaryList);
     setData(newDiaryList);
   };
 
   const onEdit = (targetId, newContent) => {
-    console.log(targetId, newContent, data);
     // 수정하기 버튼을 작성하면 , 변경된 content값이 setData를 통해서 변경된 값이 랜더링되어야 하는 과정
     // 수정하려는 id값을 선택한다. => map함수를 이용하여 localContent값을 setData값안에 넣으면 되는거 아님?
     setData(
