@@ -28,12 +28,10 @@ const InputPage = ({ Container, onCreate }) => {
       ...state,
       [e.target.name]: e.target.value, // 객체 프로퍼티를 접근하기 위한 괄호표기법 ()
     }); // 이벤트(onchange)가 발생되었을때 현재 입력되는 값으로 변경 시켜라
-
-    console.log(e.target.value);
   };
 
   const handleSumbit = () => {
-    if (state.title.length < 5) {
+    if (state.title.length < 3) {
       reftitle.current.focus();
       alert('제목은 5글자 이상입니다.');
     }
@@ -42,7 +40,6 @@ const InputPage = ({ Container, onCreate }) => {
       refcontent.current.focus();
       alert(' 5글자 입력이상을 입력해주세요');
     }
-    console.log(state);
     setState({ title: '', content: '' }); // 저장후 input에 입력된 값 초기화
     onCreate(state.content, state.title, state.emotion); // 데이터들을 app.js onCreate 함수 데이터로 전달한다.
   };
