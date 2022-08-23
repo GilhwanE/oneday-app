@@ -7,6 +7,8 @@ import styled from 'styled-components';
 import DiaryList from './components/DiaryList';
 import { useRef, useState } from 'react';
 import { useEffect } from 'react';
+import Optimize from './optimize';
+import { useCallback } from 'react';
 
 const MainContainer = styled.div`
   width: 100%;
@@ -39,56 +41,59 @@ function App() {
   const [data, setData] = useState([]);
   const dataId = useRef(0); // 리스트 아이템이 1번 2번.. id가 늘어남
 
-  const getData = async () => {
-    const res = await fetch(
-      'https://jsonplaceholder.typicode.com/comments'
-    ).then((res) => res.json());
+  // const getData = async () => {
+  //   const res = await fetch(
+  //     'https://jsonplaceholder.typicode.com/comments'
+  //   ).then((res) => res.json());
 
-    const initData = res.slice(0, 5).map((it) => {
-      // slice
-      return {
-        title: it.email,
-        content: it.body,
-        id: dataId.current++, // return 되면 값을 ㄱ반환하기 때문에 후위연산자로 했음
-      };
-    });
+  //   const initData = res.slice(0, 5).map((it) => {
+  //     // slice
+  //     return {
+  //       title: it.email,
+  //       content: it.body,
+  //       id: dataId.current++, // return 되면 값을 ㄱ반환하기 때문에 후위연산자로 했음
+  //     };
+  //   });
 
-    setData(initData);
-  };
+  //   setData(initData);
+  // };
 
-  useEffect(() => {
-    getData();
-  }, []);
+  // useEffect(() => {
+  //   getData();
+  // }, []);
 
-  const onCreate = (content, title) => {
+  const onCreate = useCallback((content, title) => {
     const newItem = {
       content,
       title,
       id: dataId.current,
     };
     dataId.current += 1;
-    setData([newItem, ...data]); // state는 배열형태임으로 배열로 랜더링해야함.
-  };
+    setData((data) => [newItem, ...data]); // state는 배열형태임으로 배열로 랜더링해야함.
+    // setData(data) 로 변경 why? 함수형 업데이트를 하기 위해서 즉, 함수를 전달한다
+    // 이렇게 되면 항상 최신의 state를 인자인 data값을 참고 할 수 있다.
+  }, []);
 
-  const onRemove = (targetId) => {
+  const onRemove = useCallback((targetId) => {
     // 삭제된 내용 말고 나머지 data값으로 업데이트 한후 setdata로 반영하는부분
-    const newDiaryList = data.filter((it) => it.id !== targetId); // targetId는 현재 내가 선택한 id 그리고 it.id 순서 이값이 서로 같지 않은 것들만 필터해서 화면에 보여주겠다는것, 서로같은값들이 필터된다면 삭제가 되지 않겠지 (필터란 결국 보여주는것을 반환)
-    setData(newDiaryList);
-  };
+    // targetId는 현재 내가 선택한 id 그리고 it.id 순서 이값이 서로 같지 않은 것들만 필터해서 화면에 보여주겠다는것, 서로같은값들이 필터된다면 삭제가 되지 않겠지 (필터란 결국 보여주는것을 반환)
+    setData((data) => data.filter((it) => it.id !== targetId));
+  }, []);
 
-  const onEdit = (targetId, newContent) => {
+  const onEdit = useCallback((targetId, newContent) => {
     // 수정하기 버튼을 작성하면 , 변경된 content값이 setData를 통해서 변경된 값이 랜더링되어야 하는 과정
     // 수정하려는 id값을 선택한다. => map함수를 이용하여 localContent값을 setData값안에 넣으면 되는거 아님?
-    setData(
+    setData((data) =>
       data.map((it) =>
         it.id === targetId ? { ...it, content: newContent } : it
       )
     );
-  };
+  }, []);
 
   return (
     <>
       <MainContainer>
+        <Optimize />
         <Inner>
           <Header />
           <InputPage Container={Container} onCreate={onCreate} />
