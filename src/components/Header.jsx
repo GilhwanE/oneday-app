@@ -12,7 +12,7 @@ const Header = () => {
     <>
       <Title>
         <div>
-          <h1>오늘은 어땠나요?</h1> <span>🖥</span>
+          <h1>오늘은 어땠나요?</h1>
         </div>
       </Title>
     </>

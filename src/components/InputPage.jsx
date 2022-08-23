@@ -1,17 +1,33 @@
-import { useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
 
 const Input = styled.input`
+  width: 100%;
+  max-width: 300px;
   height: 30px;
   margin-bottom: 30px;
   font-size: 1rem;
-  border: 1px solid gray;
+  border: none;
 `;
 
 const TextArea = styled.textarea`
   width: 100%;
   max-width: 300px;
+  border: none;
+  height: 90px;
+  margin-bottom: 30px;
+`;
+
+const Score = styled.div`
+  margin-bottom: 30px;
+`;
+
+const Submit = styled.button`
+  background-color: aqua;
   border: 1px solid gray;
+  border-radius: 5px;
+  padding: 5px;
+  font-size: 1rem;
 `;
 
 const InputPage = ({ Container, onCreate }) => {
@@ -60,24 +76,23 @@ const InputPage = ({ Container, onCreate }) => {
           type="text"
           name="content"
           value={state.content}
+          placeholder="내용을 입력해주세요"
           onChange={HandleInputText}
         />
 
-        <div>
+        <Score>
           <span>오늘 만족도 :</span>
           <select name="score" onChange={HandleInputText}>
             <option value="별로">별로</option>
             <option value="보통">보통</option>
             <option value="만족">만족</option>
           </select>
-        </div>
+        </Score>
 
-        <div>
-          <button onClick={handleSumbit}>저장하기</button>
-        </div>
+        <Submit onClick={handleSumbit}>저장하기</Submit>
       </Container>
     </>
   );
 };
 
-export default InputPage;
+export default React.memo(InputPage); // React memo로 묶인 inputpage 컴포넌트를 밖으로 빼겟다
