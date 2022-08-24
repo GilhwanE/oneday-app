@@ -5,7 +5,7 @@ import Header from './components/Header';
 import InputPage from './components/InputPage';
 import styled from 'styled-components';
 import DiaryList from './components/DiaryList';
-import { useRef, useEffect, useCallback, useReducer } from 'react';
+import React, { useRef, useEffect, useCallback, useReducer } from 'react';
 
 const MainContainer = styled.div`
   width: 100%;
@@ -51,6 +51,9 @@ const reducer = (state, action) => {
       return state; // 상태를 변화시키지 않겠다.
   }
 };
+
+export const DiaryStateContext = React.createContext();
+export const DiaryDispatchContext = React.createContext();
 
 function App() {
   // 리액트는 단방향이다 그렇기 떄문에 컴포넌트 간에 데이터를 주고 받는 행위는 하지 않는다.
@@ -113,16 +116,18 @@ function App() {
   }, []);
 
   return (
-    <>
-      <MainContainer>
-        <Inner>
-          <Header />
-          <InputPage Container={Container} onCreate={onCreate} />
-          <DiaryList diaryList={data} onRemove={onRemove} onEdit={onEdit} />
-          <Footer Container={Container} />
-        </Inner>
-      </MainContainer>
-    </>
+    <DiaryStateContext.Provider value={data}>
+      <DiaryDispatchContext.Provider>
+        <MainContainer>
+          <Inner>
+            <Header />
+            <InputPage Container={Container} onCreate={onCreate} />
+            <DiaryList onRemove={onRemove} onEdit={onEdit} />
+            <Footer Container={Container} />
+          </Inner>
+        </MainContainer>
+      </DiaryDispatchContext.Provider>
+    </DiaryStateContext.Provider>
   );
 }
 
