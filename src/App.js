@@ -6,6 +6,9 @@ import InputPage from './components/InputPage';
 import styled from 'styled-components';
 import DiaryList from './components/DiaryList';
 import React, { useRef, useEffect, useCallback, useReducer } from 'react';
+import { Route, Router, Routes } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
+import Diary from './pages/Diary';
 
 const MainContainer = styled.div`
   width: 100%;
@@ -116,18 +119,24 @@ function App() {
   }, []);
 
   return (
-    <DiaryStateContext.Provider value={data}>
-      <DiaryDispatchContext.Provider>
-        <MainContainer>
-          <Inner>
-            <Header />
-            <InputPage Container={Container} onCreate={onCreate} />
-            <DiaryList onRemove={onRemove} onEdit={onEdit} />
-            <Footer Container={Container} />
-          </Inner>
-        </MainContainer>
-      </DiaryDispatchContext.Provider>
-    </DiaryStateContext.Provider>
+    <BrowserRouter>
+      <DiaryStateContext.Provider value={data}>
+        <DiaryDispatchContext.Provider>
+          <MainContainer>
+            <Inner>
+              <Routes>
+                <Route path="/Diary" element={<Diary />} />
+              </Routes>
+
+              <Header />
+              <InputPage Container={Container} onCreate={onCreate} />
+              <DiaryList onRemove={onRemove} onEdit={onEdit} />
+              <Footer Container={Container} />
+            </Inner>
+          </MainContainer>
+        </DiaryDispatchContext.Provider>
+      </DiaryStateContext.Provider>
+    </BrowserRouter>
   );
 }
 
